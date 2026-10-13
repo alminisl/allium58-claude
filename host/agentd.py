@@ -439,6 +439,13 @@ def pusher():
                 if h is not None and h != health:
                     log("health ok" if h else "health STUCK: keyboard not answering")
                     health = h
+                if h is False:
+                    # A handle opened during a reset storm can stay dead while
+                    # writes still "succeed"; reopen instead of sending into it.
+                    with LINK.lock:
+                        LINK._close()
+                        LINK.present = False
+                    log("reopening the keyboard")
         except Exception as e:  # never let a formatting bug kill the screens
             log("pusher:", repr(e))
         tick += 1
