@@ -127,6 +127,10 @@ tools/                 desktop simulator (sim.c), GIF / contact-sheet renderers,
 - **Hold the HID device open.** Opening and closing it every second stalled the
   RP2040's USB within minutes.
 
+## Disclaimer
+
+Assisted development with Claude Code.
+
 ## License
 
 GPL-2.0-or-later, same as QMK, which the firmware is built on.
