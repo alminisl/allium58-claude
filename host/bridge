@@ -1,0 +1,10 @@
+#!/bin/bash
+# bridge pause   - let go of the keyboard (for vial.rocks / Vial), screens go offline
+# bridge resume  - start feeding the screens again
+# bridge status
+plist="$HOME/Library/LaunchAgents/com.allium58.agentd.plist"
+case "$1" in
+  pause)  launchctl bootout "gui/$(id -u)/com.allium58.agentd" 2>/dev/null; echo "bridge paused" ;;
+  resume) launchctl bootstrap "gui/$(id -u)" "$plist" 2>/dev/null; echo "bridge running" ;;
+  *)      pgrep -f agentd.py >/dev/null && echo "running" || echo "paused" ;;
+esac

@@ -1,0 +1,11 @@
+vial-qmk/
+*.uf2
+.venv/
+__pycache__/
+host/*.log
+host/layout_fingerprint.json
+tools/sim
+tools/fuzz
+tools/*.bin
+tools/trace.txt
+.DS_Store

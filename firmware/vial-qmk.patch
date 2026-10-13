@@ -1,0 +1,45 @@
+diff --git a/quantum/via.c b/quantum/via.c
+index 1911c4a5..a61b25a6 100644
+--- a/quantum/via.c
++++ b/quantum/via.c
+@@ -208,10 +208,20 @@ __attribute__((weak)) void raw_hid_receive_kb(uint8_t *data, uint8_t length) {
+ //
+ // raw_hid_send() is called at the end, with the same buffer, which was
+ // possibly modified with returned values.
++// One-way display updates from a host bridge (allium58 claude keymap): no
++// reply. Echoing every one back fills the raw HID IN queue whenever the host
++// closes the device between updates, and on RP2040 that stalls the whole USB
++// stack, keyboard reports included, until the board is replugged.
++__attribute__((weak)) bool raw_hid_receive_noreply_kb(uint8_t *data, uint8_t length) {
++    return false;
++}
++
+ void raw_hid_receive(uint8_t *data, uint8_t length) {
+     uint8_t *command_id   = &(data[0]);
+     uint8_t *command_data = &(data[1]);
+ 
++    if (raw_hid_receive_noreply_kb(data, length)) return;
++
+ #ifdef VIAL_ENABLE
+     /* When unlock is in progress, we can only react to a subset of commands */
+     if (vial_unlock_in_progress) {
+diff --git a/util/build_id.py b/util/build_id.py
+index 77e56b59..d6835682 100644
+--- a/util/build_id.py
++++ b/util/build_id.py
+@@ -1,8 +1,14 @@
++import os
+ import random
+ 
+ 
+ def main():
+-    print("#define BUILD_ID ((uint32_t)0x{:08X})".format(random.randrange(0, 2 ** 24 - 1)))
++    # Vial wipes the stored keymap whenever this changes, which by default is
++    # every build. VIAL_BUILD_ID pins it so a reflash keeps the layout; bump
++    # it whenever the EEPROM layout changes (layer count, tap dance, macros).
++    fixed = os.environ.get("VIAL_BUILD_ID")
++    value = int(fixed, 0) if fixed else random.randrange(0, 2 ** 24 - 1)
++    print("#define BUILD_ID ((uint32_t)0x{:08X})".format(value))
+ 
+ 
+ if __name__ == "__main__":

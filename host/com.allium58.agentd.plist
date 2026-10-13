@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key><string>com.allium58.agentd</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>__HOME__/allium58/host/.venv/bin/python</string>
+        <string>-I</string>
+        <string>__HOME__/allium58/host/agentd.py</string>
+    </array>
+    <key>RunAtLoad</key><true/>
+    <key>KeepAlive</key><true/>
+    <key>StandardErrorPath</key><string>__HOME__/allium58/host/agentd.log</string>
+    <key>StandardOutPath</key><string>__HOME__/allium58/host/agentd.log</string>
+</dict>
+</plist>
